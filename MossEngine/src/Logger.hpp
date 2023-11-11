@@ -10,19 +10,19 @@
 class Logger
 {
 public:
-	static void LogInfo(const char* message)
+	static void LogInfo(const char* message, const char* title = "Info")
 	{
-		Log(message, Color::Blue, "Info");
+		Log(message, Color::Blue, title);
 	}
 
-	static void LogWarning(const char* message)
+	static void LogWarning(const char* message, const char* title = "Warning")
 	{
-		Log(message, Color::Yellow, "Warning");
+		Log(message, Color::Yellow, title);
 	}
 
-	static void LogError(const char* message)
+	static void LogError(const char* message, const char* title = "Error")
 	{
-		Log(message, Color::Red, "Error");
+		Log(message, Color::Red, title);
 	}
 
 	static void Log(const char* message = "", Color color = Color::White, const char* title = "Log")
