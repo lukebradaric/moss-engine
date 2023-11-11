@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 
-#include "Logger.hpp"
+#include "Logger.h"
 
 struct ShaderProgramSource
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-enum Color
+enum ConsoleColor
 {
 	Black = 0,
 	DarkBlue = 1,

@@ -5,27 +5,27 @@
 #include <iostream>
 #include <iomanip>
 
-#include "Color.hpp"
+#include "ConsoleColor.h"
 
 class Logger
 {
 public:
 	static void LogInfo(const char* message, const char* title = "Info")
 	{
-		Log(message, Color::Blue, title);
+		Log(message, ConsoleColor::Blue, title);
 	}
 
 	static void LogWarning(const char* message, const char* title = "Warning")
 	{
-		Log(message, Color::Yellow, title);
+		Log(message, ConsoleColor::Yellow, title);
 	}
 
 	static void LogError(const char* message, const char* title = "Error")
 	{
-		Log(message, Color::Red, title);
+		Log(message, ConsoleColor::Red, title);
 	}
 
-	static void Log(const char* message = "", Color color = Color::White, const char* title = "Log")
+	static void Log(const char* message = "", ConsoleColor color = ConsoleColor::White, const char* title = "Log")
 	{
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)color);
 
@@ -37,6 +37,6 @@ public:
 		std::cout << '[' << title << "] ";
 		std::cout << message << std::endl;
 
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)Color::White);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)ConsoleColor::White);
 	}
 };
