@@ -7,7 +7,7 @@
 #include "VertexArray.h"
 #include "Shader.cpp"
 #include "Logger.h"
-
+#include "Shader.h"
 
 int main(void)
 {
@@ -16,8 +16,8 @@ int main(void)
 	if (!glfwInit())
 		return -1;
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
@@ -62,37 +62,28 @@ int main(void)
 
 		IndexBuffer indexBuffer(indices, 6);
 
-		ShaderProgramSource shaderSource = ParseShader("res/shaders/Basic.shader");
-		unsigned int shaderProgram = CreateShader(shaderSource.VertexSource, shaderSource.FragmentSource);
-		GLCall(glUseProgram(shaderProgram));
-
-		GLCall(int location = glGetUniformLocation(shaderProgram, "u_Color"));
-		ASSERT(location != -1);
-		GLCall(glUniform4f(location, 0.0f, 1.0f, 1.0f, 1.0f));
+		Shader shader("res/shaders/Basic.shader");
+		shader.Bind();
+		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 
 		vertexArray.Unbind();
-		GLCall(glUseProgram(0));
-		GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+		shader.Unbind();
+		vertexBuffer.Unbind();
+		indexBuffer.Unbind();
 
 		while (!glfwWindowShouldClose(window))
 		{
 			GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-			GLCall(glUseProgram(shaderProgram));
-			GLCall(glUniform4f(location, 1.0f, 0.4f, 0.8f, 1.0f));
-
+			shader.Bind();
 			vertexArray.Bind();
 			indexBuffer.Bind();
 
 			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
 			glfwSwapBuffers(window);
-
 			glfwPollEvents();
 		}
-
-		GLCall(glDeleteProgram(shaderProgram));
 	}
 
 	glfwTerminate();

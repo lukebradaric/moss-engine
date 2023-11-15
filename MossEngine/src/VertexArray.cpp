@@ -14,8 +14,9 @@ VertexArray::~VertexArray()
 
 void VertexArray::AddBuffer(const VertexBuffer& vertexBuffer, const VertexBufferLayout& vertexLayout)
 {
-	// Bind vertex array and bind the buffer we are using
+	// Bind this vertex array
 	Bind();
+	// Bind the vertex buffer
 	vertexBuffer.Bind();
 
 	// Setup layout for vertex array
