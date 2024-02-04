@@ -11,6 +11,7 @@
 #include "Shader.cpp"
 #include "Logger.h"
 #include "Shader.h"
+#include "Texture.h"
 
 int main(void)
 {
@@ -44,10 +45,10 @@ int main(void)
 	{
 		float positions[] =
 		{
-		   -0.5f, -0.5f,
-			0.5f, -0.5f,
-			0.5f,  0.5f,
-		   -0.5f,  0.5f
+		   -0.5f, -0.5f, 0.0f, 0.0f,
+			0.5f, -0.5f, 1.0f, 0.0f,
+			0.5f,  0.5f, 1.0f, 1.0f,
+		   -0.5f,  0.5f, 0.0f, 1.0f
 		};
 
 		unsigned int indices[] =
@@ -57,9 +58,10 @@ int main(void)
 		};
 
 		VertexArray vertexArray;
-		VertexBuffer vertexBuffer(positions, 4 * 2 * sizeof(float));
+		VertexBuffer vertexBuffer(positions, 4 * 4 * sizeof(float));
 
 		VertexBufferLayout layout;
+		layout.Push<float>(2);
 		layout.Push<float>(2);
 		vertexArray.AddBuffer(vertexBuffer, layout);
 
@@ -68,6 +70,10 @@ int main(void)
 		Shader shader("res/shaders/Basic.shader");
 		shader.Bind();
 		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
+
+		Texture texture("res/textures/FloatFrog.png");
+		texture.Bind();
+		shader.SetUniform1i("u_Texture", 0);
 
 		vertexArray.Unbind();
 		shader.Unbind();
@@ -78,7 +84,7 @@ int main(void)
 
 		while (!glfwWindowShouldClose(window))
 		{
-			GLCall(glClear(GL_COLOR_BUFFER_BIT));
+			renderer.Clear();
 
 			shader.Bind();
 
