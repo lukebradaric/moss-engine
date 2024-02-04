@@ -1,8 +1,11 @@
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
+
 #include <iostream>
+
 #include "Renderer.h"
 #include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.cpp"
@@ -71,13 +74,15 @@ int main(void)
 		vertexBuffer.Unbind();
 		indexBuffer.Unbind();
 
+		Renderer renderer;
+
 		while (!glfwWindowShouldClose(window))
 		{
 			GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
 			shader.Bind();
-			vertexArray.Bind();
-			indexBuffer.Bind();
+
+			renderer.Draw(vertexArray, indexBuffer, shader);
 
 			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
