@@ -1,9 +1,11 @@
 #ifndef MOVEMENTSYSTEM_H
 #define MOVEMENTSYSTEM_H
 
-#include "System.h"
-#include "Component.h"
-#include "World.h"
+#include "core/System.h"
+#include "core/Component.h"
+#include "core/World.h"
+#include "components/PositionComponent.h"
+#include "components/VelocityComponent.h"
 
 class MovementSystem : public System
 {

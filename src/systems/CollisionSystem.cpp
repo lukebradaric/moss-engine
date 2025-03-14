@@ -1,5 +1,9 @@
-#include "CollisionSystem.h"
 #include <vector>
+#include "CollisionSystem.h"
+#include "components/PositionComponent.h"
+#include "components/VelocityComponent.h"
+#include "components/CollisionComponent.h"
+#include "components/RigidbodyComponent.h"
 
 void CollisionSystem::update(float deltaTime, World& world)
 {

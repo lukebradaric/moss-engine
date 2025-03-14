@@ -1,11 +1,12 @@
 #ifndef SPRITERENDERSYSTEM_H
 #define SPRITERENDERSYSTEM_H
 
-#include "Component.h"
-#include "System.h"
 #include <SFML/Graphics.hpp>
-#include "World.h"
-#include "Camera.h"
+#include "core/System.h"
+#include "core/World.h"
+#include "utils/Camera.h"
+#include "components/PositionComponent.h"
+#include "components/SpriteRenderComponent.h"
 
 class SpriteRenderSystem : public System
 {

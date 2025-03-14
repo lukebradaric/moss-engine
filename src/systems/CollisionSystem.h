@@ -1,7 +1,8 @@
 #pragma once
 
-#include "System.h"
-#include "World.h"
+#include "core/System.h"
+#include "core/World.h"
+#include "SFML/Graphics.hpp"
 
 class CollisionSystem : public System
 {

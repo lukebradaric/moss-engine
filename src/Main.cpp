@@ -1,15 +1,18 @@
 #include <SFML/Graphics.hpp>
-#include "ComponentPool.h"
 #include <imgui.h>
 #include <imgui-SFML.h>
-#include "World.h"
-#include "MovementSystem.h"
-#include "SpriteRenderSystem.h"
-#include "CollisionSystem.h"
-#include "TextureManager.h"
-#include "Camera.h"
 #include <iostream>
 #include <filesystem>
+#include "core/ComponentPool.h"
+#include "core/World.h"
+#include "systems/MovementSystem.h"
+#include "systems/SpriteRenderSystem.h"
+#include "systems/CollisionSystem.h"
+#include "components/CollisionComponent.h"
+#include "components/RigidbodyComponent.h"
+#include "utils/TextureManager.h"
+#include "utils/Camera.h"
+#include "utils/Logger.h"
 
 static float worldWidth = 25.0f;
 static float worldHeight = 14.0625f;
@@ -38,6 +41,7 @@ float averageFps = 0;
 World world;
 Camera camera(7.0f, 16.0f);
 TextureManager textureManager;
+Logger logger;
 
 sf::Color toSfColor(const float color[4])
 {
@@ -92,6 +96,8 @@ void renderImGui(World& world)
 		newEntity.addComponent<CollisionComponent>(CollisionComponent(radius));
 		newEntity.addComponent<RigidbodyComponent>(RigidbodyComponent(mass, bounce));
 		newEntity.addComponent(SpriteRenderComponent(textureManager.getTexture("goblin")));
+
+		logger.logInfo("Spawning Goblin with Id: " + std::to_string(newEntity.getId()));
 	}
 
 	ImGui::End();
@@ -111,6 +117,8 @@ void renderImGui(World& world)
 
 int main()
 {
+	logger.logInfo("Application start.");
+
 	sf::RenderWindow window(sf::VideoMode(800, 450), "Moss Engine");
 	window.setFramerateLimit(144);
 

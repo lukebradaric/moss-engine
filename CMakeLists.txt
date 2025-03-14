@@ -5,6 +5,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 include(FetchContent)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 # Fetch SFML
 FetchContent_Declare(SFML
@@ -39,7 +40,7 @@ if(NOT imgui-sfml_POPULATED)
         ${imgui_SOURCE_DIR}/imgui.cpp
         ${imgui_SOURCE_DIR}/imgui_draw.cpp
         ${imgui_SOURCE_DIR}/imgui_tables.cpp
-        ${imgui_SOURCE_DIR}/imgui_widgets.cpp "src/SpriteRenderSystem.h"  "src/TextureManager.h" "src/TextureManager.cpp" "src/Camera.h" "src/Camera.cpp")
+        ${imgui_SOURCE_DIR}/imgui_widgets.cpp "src/systems/SpriteRenderSystem.h"  "src/utils/TextureManager.h" "src/utils/TextureManager.cpp" "src/utils/Camera.h" "src/utils/Camera.cpp" "src/utils/Logger.h" "src/utils/Logger.cpp" "src/utils/ConsoleColor.h" "src/components/PositionComponent.h" "src/components/VelocityComponent.h" "src/components/SpriteRenderComponent.h" "src/components/RigidbodyComponent.h" "src/components/CollisionComponent.h")
     target_include_directories(ImGui-SFML PUBLIC
         ${imgui-sfml_SOURCE_DIR}
         ${imgui_SOURCE_DIR}
@@ -50,22 +51,24 @@ endif()
 
 add_executable(${PROJECT_NAME} 
     "src/Main.cpp" 
-    "src/Component.h" 
-    "src/ComponentPool.h"  
-    "src/Entity.h" 
-    "src/World.h" 
-    "src/ComponentPoolBase.h" 
-    "src/System.h"  
-    "src/MovementSystem.h"   
-    
-    "src/CollisionSystem.h" 
-    "src/CollisionSystem.cpp" 
-    "src/World.cpp" 
-    "src/SpriteRenderSystem.h"  
-    "src/TextureManager.h" 
-    "src/TextureManager.cpp" 
-    "src/Camera.h" 
-    "src/Camera.cpp")
+    "src/core/Component.h" 
+    "src/core/ComponentPool.h"  
+    "src/core/Entity.h" 
+    "src/core/World.h" 
+    "src/core/ComponentPoolBase.h" 
+    "src/core/System.h"  
+    "src/systems/MovementSystem.h"   
+    "src/systems/CollisionSystem.h" 
+    "src/systems/CollisionSystem.cpp" 
+    "src/core/World.cpp" 
+    "src/systems/SpriteRenderSystem.h"  
+    "src/utils/TextureManager.h" 
+    "src/utils/TextureManager.cpp" 
+    "src/utils/Camera.h" 
+    "src/utils/Camera.cpp" 
+    "src/utils/Logger.h" 
+    "src/utils/Logger.cpp" 
+    "src/utils/ConsoleColor.h" "src/components/PositionComponent.h" "src/components/VelocityComponent.h" "src/components/SpriteRenderComponent.h" "src/components/RigidbodyComponent.h" "src/components/CollisionComponent.h")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics ImGui-SFML)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
