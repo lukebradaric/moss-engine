@@ -85,7 +85,7 @@ public:
 
 	// Returns a reference to entities
 	// Entities cannot be modified
-	const std::vector<Entity>& getEntities() const { return _entities; }
+	inline const std::vector<Entity>& getEntities() const { return _entities; }
 };
 
 #endif

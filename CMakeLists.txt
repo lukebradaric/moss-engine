@@ -39,7 +39,7 @@ if(NOT imgui-sfml_POPULATED)
         ${imgui_SOURCE_DIR}/imgui.cpp
         ${imgui_SOURCE_DIR}/imgui_draw.cpp
         ${imgui_SOURCE_DIR}/imgui_tables.cpp
-        ${imgui_SOURCE_DIR}/imgui_widgets.cpp "src/SpriteRenderSystem.h" )
+        ${imgui_SOURCE_DIR}/imgui_widgets.cpp "src/SpriteRenderSystem.h"  "src/TextureManager.h" "src/TextureManager.cpp" "src/Camera.h" "src/Camera.cpp")
     target_include_directories(ImGui-SFML PUBLIC
         ${imgui-sfml_SOURCE_DIR}
         ${imgui_SOURCE_DIR}
@@ -57,13 +57,20 @@ add_executable(${PROJECT_NAME}
     "src/ComponentPoolBase.h" 
     "src/System.h"  
     "src/MovementSystem.h"   
-    "src/CircleRenderSystem.h"
+    
     "src/CollisionSystem.h" 
     "src/CollisionSystem.cpp" 
-    "src/World.cpp" "src/SpriteRenderSystem.h" )
+    "src/World.cpp" 
+    "src/SpriteRenderSystem.h"  
+    "src/TextureManager.h" 
+    "src/TextureManager.cpp" 
+    "src/Camera.h" 
+    "src/Camera.cpp")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics ImGui-SFML)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR}/bin)
 
 if(WIN32)
     add_custom_command(

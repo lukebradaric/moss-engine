@@ -4,18 +4,26 @@
 #include <imgui-SFML.h>
 #include "World.h"
 #include "MovementSystem.h"
-#include "CircleRenderSystem.h"
 #include "SpriteRenderSystem.h"
 #include "CollisionSystem.h"
+#include "TextureManager.h"
+#include "Camera.h"
 #include <iostream>
 #include <filesystem>
 
+static float worldWidth = 25.0f;
+static float worldHeight = 14.0625f;
+
+static float camX = 0.0f;
+static float camY = 0.0f;
+static float camZoom = 7.0f;
+
 // Entity control window variables
-static float posX = 0.0f;
-static float posY = 0.0f;
+static float posX = 0;
+static float posY = 0;
 static float velX = 0.0f;
 static float velY = 0.0f;
-static float radius = 25.0f;
+static float radius = 1.0f;
 static float mass = 10.0f;
 static float bounce = 0.75f;
 static float color[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
@@ -28,6 +36,8 @@ float averageFps = 0;
 
 // ECS world
 World world;
+Camera camera(7.0f, 16.0f);
+TextureManager textureManager;
 
 sf::Color toSfColor(const float color[4])
 {
@@ -57,33 +67,44 @@ void renderImGui(World& world)
 {
 	ImGui::Begin("ECS Control");
 
-	ImGui::Text("FPS: %d", (int)averageFps);
-
-	ImGui::SliderFloat("Pos X", &posX, 0.0f, 800.0f);
-	ImGui::SliderFloat("Pos Y", &posY, 0.0f, 600.0f);
-	ImGui::SliderFloat("Vel X", &velX, -1000.0f, 1000.0f);
-	ImGui::SliderFloat("Vel Y", &velY, -1000.0f, 1000.0f);
-	ImGui::SliderFloat("Radius", &radius, 5.0f, 50.0f);
+	ImGui::SliderFloat("Pos X", &posX, -worldWidth, worldWidth);
+	ImGui::SliderFloat("Pos Y", &posY, -worldHeight, worldHeight);
+	ImGui::SliderFloat("Vel X", &velX, -100.0f, 100.0f);
+	ImGui::SliderFloat("Vel Y", &velY, -100.0f, 100.0f);
+	ImGui::SliderFloat("Radius", &radius, 0.0f, 10.0f);
 	ImGui::SliderFloat("Mass", &mass, 0.0f, 100.0f);
 	ImGui::SliderFloat("Bounce", &bounce, 0.0f, 1.0f);
 	ImGui::ColorEdit4("Color", color);
 
-	if (ImGui::Button("Spawn Entity"))
+	ImGui::Separator();
+
+	ImGui::Text("FPS: %d", (int)averageFps);
+	ImGui::Text("Entity Count: %d", world.getEntities().size());
+
+	ImGui::Separator();
+
+	if (ImGui::Button("Spawn Goblin"))
 	{
 		Entity newEntity = world.createEntity();
-		PositionComponent* posComp = newEntity.addComponent(PositionComponent(posX, posY));
+
+		newEntity.addComponent(PositionComponent(posX, posY));
 		newEntity.addComponent(VelocityComponent(velX, velY));
-		newEntity.addComponent(CircleRenderComponent(radius, toSfColor(color)));
 		newEntity.addComponent<CollisionComponent>(CollisionComponent(radius));
 		newEntity.addComponent<RigidbodyComponent>(RigidbodyComponent(mass, bounce));
-
-		// SpriteComponent testing
-		//auto* spriteComp = newEntity.addComponent(SpriteRenderComponent("sprite.png"));
-		//if (!spriteComp->texture.getSize().x)
-		//{  // Check if texture loaded
-		//	std::cerr << "Texture failed to load, check file path and format" << std::endl;
-		//}
+		newEntity.addComponent(SpriteRenderComponent(textureManager.getTexture("goblin")));
 	}
+
+	ImGui::End();
+
+	ImGui::Begin("Camera Control");
+
+	ImGui::SliderFloat("Cam X", &camX, -worldWidth / 2, worldWidth / 2);
+	ImGui::SliderFloat("Cam Y", &camY, -worldHeight / 2, worldHeight / 2);
+	ImGui::SliderFloat("Zoom", &camZoom, 1.0f, 14.0f);
+
+	camera.position.x = camX;
+	camera.position.y = camY;
+	camera.orthoSize = camZoom;
 
 	ImGui::End();
 }
@@ -95,16 +116,13 @@ int main()
 
 	ImGui::SFML::Init(window);
 
+	textureManager.loadTexture("goblin", "goblin.png");
+
 	world.addSystem(std::make_unique<MovementSystem>());
-	world.addSystem(std::make_unique<CircleRenderSystem>(window));
-	world.addSystem(std::make_unique<CollisionSystem>(window));
-	world.addSystem(std::make_unique<SpriteRenderSystem>(window));
+	world.addSystem(std::make_unique<CollisionSystem>(sf::Vector2f(worldWidth, worldHeight)));
+	world.addSystem(std::make_unique<SpriteRenderSystem>(window, camera));
 
 	sf::Clock deltaClock;
-
-	// Initialize spawn pos as center of screen
-	posX = window.getView().getSize().x / 2;
-	posY = window.getView().getSize().y / 2;
 
 	while (window.isOpen())
 	{

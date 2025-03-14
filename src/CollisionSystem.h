@@ -6,10 +6,10 @@
 class CollisionSystem : public System
 {
 private:
-	sf::RenderWindow& _window;
-	static constexpr float GRAVITY = 980.0f;
+	sf::Vector2f _worldSize;
+	static constexpr float GRAVITY = -98.0f;
 
 public:
-	CollisionSystem(sf::RenderWindow& window) : _window(window) {}
+	CollisionSystem(sf::Vector2f worldSize) : _worldSize(worldSize) {}
 	void update(float deltaTime, World& world) override;
 };

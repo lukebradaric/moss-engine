@@ -3,9 +3,6 @@
 
 void CollisionSystem::update(float deltaTime, World& world)
 {
-	const float windowWidth = static_cast<float>(_window.getSize().x);
-	const float windowHeight = static_cast<float>(_window.getSize().y);
-
 	const std::vector<Entity>& entities = world.getEntities();
 
 	for (auto& entity : entities)
@@ -25,24 +22,24 @@ void CollisionSystem::update(float deltaTime, World& world)
 
 		// Handle collision with edges of sf::RenderWindow
 		// Temporary collision for testing
-		if (position->x - collision->radius < 0)
+		if (position->x - collision->radius < -_worldSize.x)
 		{
-			position->x = collision->radius;
+			position->x = -_worldSize.x + collision->radius;
 			velocity->dx = -velocity->dx * rigidbody->bounce;
 		}
-		if (position->x + collision->radius > windowWidth)
+		if (position->x + collision->radius > _worldSize.x)
 		{
-			position->x = windowWidth - collision->radius;
+			position->x = _worldSize.x - collision->radius;
 			velocity->dx = -velocity->dx * rigidbody->bounce;
 		}
-		if (position->y - collision->radius < 0)
+		if (position->y - collision->radius < -_worldSize.y)
 		{
-			position->y = collision->radius;
+			position->y = -_worldSize.y + collision->radius;
 			velocity->dy = -velocity->dy * rigidbody->bounce;
 		}
-		if (position->y + collision->radius > windowHeight)
+		if (position->y + collision->radius > _worldSize.y)
 		{
-			position->y = windowHeight - collision->radius;
+			position->y = _worldSize.y - collision->radius;
 			velocity->dy = -velocity->dy * rigidbody->bounce;
 		}
 

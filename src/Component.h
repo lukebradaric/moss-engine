@@ -27,31 +27,16 @@ struct VelocityComponent : Component
 	VelocityComponent(float dx = 0.0f, float dy = 0.0f) : dx(dx), dy(dy) {}
 };
 
-struct CircleRenderComponent : Component
-{
-	float radius;
-	sf::Color color;
-
-	CircleRenderComponent(float radius, sf::Color color) : radius(radius), color(color) {}
-};
-
 struct SpriteRenderComponent : Component
 {
-	sf::Sprite sprite;
-	sf::Texture texture;
-	//bool isVisible = true;
+	sf::Sprite sprite; 
+	sf::Vector2f origin;
 
-	SpriteRenderComponent(const char* fileName)
+	SpriteRenderComponent(sf::Texture& textureRef)
 	{
-		if (!texture.loadFromFile(fileName))
-		{
-			std::cout << "Failed to load texture from: " << fileName << " in directory: " << std::filesystem::current_path() << std::endl;
-		}
-		else
-		{
-			std::cout << "Tex load success: " << fileName << " in directory: " << std::filesystem::current_path() << std::endl;
-			sprite.setTexture(texture);
-		}
+		sprite.setTexture(textureRef);
+		sf::Vector2u textureSize = textureRef.getSize();
+		origin = sf::Vector2f(textureSize.x / 2.0f, textureSize.y / 2.0f);
 	}
 };
 
